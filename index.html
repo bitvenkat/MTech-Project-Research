@@ -1,0 +1,397 @@
+<!-- Chosen Palette: Warm Neutral (Gray-50, White) with Teal Accent (Teal-700, Teal-400) -->
+<!-- Application Structure Plan: Dashboard approach with four thematic sections: 1. Core Constraints (Dynamic Stats), 2. Hardware Benchmarking (Chart.js comparison of RPi variants - Table 1 data), 3. Optimization Pipeline (Clickable Cards for QAT, Pruning, KD - Table 2 data), and 4. Research Proposals (Tabbed Interface for deep dive into Proposals 1, 2, 3 - Table 3 data). This structure was chosen for usability because it separates the "Why" (Constraints) from the "How" (Optimization) and the "What" (Proposals), facilitating non-linear exploration. -->
+<!-- Visualization & Content Choices: Summary: Core Constraints (Latency, Power) -> Goal -> Inform -> Viz/Presentation Method -> Dynamic Stats -> Interaction -> None -> Justification -> Sets the stage immediately. -> Library/Method -> HTML/Tailwind. Table 1 Benchmarking -> Goal -> Compare Platform Efficiency -> Viz/Presentation Method -> Bar Chart (FPS vs. Platform) -> Interaction -> Tooltip hover for details -> Justification -> Visualizes the critical RPi 5 + Coral TPU acceleration necessity. -> Library/Method -> Chart.js. Optimization Strategies (Table 2) -> Goal -> Organize/Explain Process -> Viz/Presentation Method -> Clickable Cards -> Interaction -> Toggle detailed text -> Justification -> Simplifies the complex hybrid compression methodology. -> Library/Method -> HTML/JS Toggle. Proposals (Table 3) -> Goal -> Explore Case Studies -> Viz/Presentation Method -> Tabbed Interface & Metric Cards -> Interaction -> Click tab to switch content -> Justification -> Provides deep dives without page clutter. -> Library/Method -> HTML/JS Tab Logic. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge AI for UAVs: Efficiency & Deployment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        .content-section { scroll-margin-top: 5rem; }
+    </style>
+</head>
+<body>
+
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-teal-700">Edge AI for UAVs: Research Synthesis</h1>
+            <nav class="mt-3 md:mt-0 space-x-4">
+                <button onclick="navigateSection('overview')" class="text-gray-600 hover:text-teal-700 transition duration-150 font-medium">Overview</button>
+                <button onclick="navigateSection('benchmarks')" class="text-gray-600 hover:text-teal-700 transition duration-150 font-medium">Benchmarks</button>
+                <button onclick="navigateSection('optimization')" class="text-gray-600 hover:text-teal-700 transition duration-150 font-medium">Optimization</button>
+                <button onclick="navigateSection('proposals')" class="text-gray-600 hover:text-teal-700 transition duration-150 font-medium">Proposals</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Section 1: Core Constraints / Overview -->
+        <section id="overview" class="content-section mb-16 pt-4">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-2 border-teal-400">I. Architectural Foundations: Edge AI Constraints</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-4xl">
+                The primary challenge in deploying advanced Machine Learning on Unmanned Aerial Vehicles (UAVs) using platforms like the Raspberry Pi is the **severe trade-off between power consumption and real-time inference speed**. Autonomous drone feasibility depends on minimizing total end-to-end latency to **sub-50 ms** for critical dynamic tasks like collision avoidance, while simultaneously extending battery life. This section introduces the core computational bottlenecks that high-impact research must address.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-teal-500">
+                    <div class="text-5xl font-bold text-teal-700" id="stat-latency-target">~50 ms</div>
+                    <p class="mt-2 text-sm font-semibold text-gray-500">Real-Time Latency Target</p>
+                    <p class="mt-1 text-gray-600 text-sm">Required for high-speed, low-altitude collision avoidance.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-teal-500">
+                    <div class="text-5xl font-bold text-teal-700" id="stat-rpi-speedup">5x</div>
+                    <p class="mt-2 text-sm font-semibold text-gray-500">RPi 5 Performance Leap</p>
+                    <p class="mt-1 text-gray-600 text-sm">Approximate speed increase over RPi 4 for full TensorFlow models.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-teal-500">
+                    <div class="text-5xl font-bold text-teal-700" id="stat-bottleneck-fix">INT8 / TPU</div>
+                    <p class="mt-2 text-sm font-semibold text-gray-500">Bottleneck Solution</p>
+                    <p class="mt-1 text-gray-600 text-sm">Specialized hardware (e.g., Coral Edge TPU) is needed for high-throughput INT8 inference.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Comparative Hardware Benchmarking -->
+        <section id="benchmarks" class="content-section mb-16 pt-4">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-2 border-teal-400">II. Comparative Benchmarking of Edge AI Platforms</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-4xl">
+                The selection of the processing platform fundamentally defines the boundary of feasible research. This visualization uses data from comparative benchmarking (Table 1) to illustrate the power-performance trade-off and the necessity of specialized acceleration to overcome the Raspberry Pi's inherent CPU limitations for real-time vision tasks.
+            </p>
+            <div class="flex flex-col items-center">
+                <div class="chart-container">
+                    <canvas id="platformChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Optimization Pipeline -->
+        <section id="optimization" class="content-section mb-16 pt-4">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-2 border-teal-400">III. Optimization Pipeline: Hybrid Compression Techniques</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-4xl">
+                Achieving publishable efficiency requires a systematic, multi-step optimization pipeline. The novelty often resides in demonstrating the synergistic benefits of combining these techniques in a **hardware-aware manner** (Table 2). Click on each technique to explore its trade-offs and research value.
+            </p>
+
+            <div class="mb-10 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                <h4 class="text-xl font-semibold text-gray-800 mb-6 text-center">Example Hybrid Optimization Flow</h4>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="p-4 bg-white rounded-lg shadow-md border border-gray-300 text-center md:text-left">
+                            <p class="font-bold text-teal-700">1. QAT</p>
+                            <p class="text-sm text-gray-600">Quantization-Aware Training</p>
+                        </div>
+                        <div class="text-3xl text-teal-500 font-light mx-2 transform rotate-90 md:rotate-0">&rarr;</div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="p-4 bg-white rounded-lg shadow-md border border-gray-300 text-center md:text-left">
+                            <p class="font-bold text-teal-700">2. Pruning</p>
+                            <p class="text-sm text-gray-600">Structured Channel Pruning</p>
+                        </div>
+                        <div class="text-3xl text-teal-500 font-light mx-2 transform rotate-90 md:rotate-0">&rarr;</div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="p-4 bg-white rounded-lg shadow-md border border-gray-300 text-center md:text-left">
+                            <p class="font-bold text-teal-700">3. KD</p>
+                            <p class="text-sm text-gray-600">Knowledge Distillation</p>
+                        </div>
+                        <div class="text-3xl text-teal-500 font-light mx-2 transform rotate-90 md:rotate-0">&rarr;</div>
+                    </div>
+                    <div class="p-4 bg-teal-700 text-white rounded-lg shadow-lg text-center md:text-left">
+                        <p class="font-bold">Optimized Model</p>
+                        <p class="text-sm text-teal-100">INT8 TFLite</p>
+                    </div>
+                </div>
+                <p class="text-center text-gray-600 text-sm mt-4">This demonstrates a *synergistic* approach, such as Quantization-Aware Pruning, leading to a final distilled model.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <button onclick="toggleOptimization('qat')" id="btn-qat" class="p-6 bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-teal-500 transition duration-300 transform hover:scale-[1.02] text-left">
+                    <p class="text-xl font-bold text-teal-700">1. Quantization (QAT/PTQ)</p>
+                    <p class="mt-1 text-gray-600">Reducing parameter precision (FP32 $\rightarrow$ INT8) for memory and speed gains.</p>
+                </button>
+                <button onclick="toggleOptimization('pruning')" id="btn-pruning" class="p-6 bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-teal-500 transition duration-300 transform hover:scale-[1.02] text-left">
+                    <p class="text-xl font-bold text-teal-700">2. Structured Pruning</p>
+                    <p class="mt-1 text-gray-600">Removing redundant channels or filters to simplify the computation graph.</p>
+                </button>
+                <button onclick="toggleOptimization('distillation')" id="btn-distillation" class="p-6 bg-white rounded-xl shadow-lg border-2 border-gray-200 hover:border-teal-500 transition duration-300 transform hover:scale-[1.02] text-left">
+                    <p class="text-xl font-bold text-teal-700">3. Knowledge Distillation (KD)</p>
+                    <p class="mt-1 text-gray-600">Transferring complex policy/knowledge from a Teacher to a compact Student model.</p>
+                </button>
+            </div>
+
+            <div id="optimization-details" class="bg-teal-50 p-6 rounded-xl shadow-inner border border-teal-300 hidden">
+                <h3 class="text-2xl font-semibold text-teal-800 mb-3" id="opt-title"></h3>
+                <p class="text-gray-700 mb-4" id="opt-description"></p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p class="font-bold text-sm uppercase text-teal-700">Primary Metrics Improved</p>
+                        <p class="text-gray-800" id="opt-metrics"></p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm uppercase text-teal-700">Risk/Trade-off</p>
+                        <p class="text-gray-800" id="opt-tradeoff"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Research Proposals -->
+        <section id="proposals" class="content-section pt-4 mb-16">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-2 border-teal-400">IV. Research Proposals: Projects for Publication</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-4xl">
+                These three proposals represent high-impact research tracks, each focusing on a different aspect of edge AI: **Perception (Vision), Control (Policy), and Reliability (Multimodal)**. Use the tabs to explore the core novelty and required technical efforts (Table 3).
+            </p>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <!-- Tabs -->
+                <div class="flex border-b-2 border-gray-200 overflow-x-auto whitespace-nowrap">
+                    <button id="tab-proposal1" onclick="switchProposal(1)" class="px-4 py-2 text-sm md:text-base font-medium text-white bg-teal-700 rounded-t-lg transition duration-150">Proposal 1: Semantic Segmentation</button>
+                    <button id="tab-proposal2" onclick="switchProposal(2)" class="px-4 py-2 text-sm md:text-base font-medium text-gray-600 hover:text-teal-700 transition duration-150">Proposal 2: Learned Control Policies</button>
+                    <button id="tab-proposal3" onclick="switchProposal(3)" class="px-4 py-2 text-sm md:text-base font-medium text-gray-600 hover:text-teal-700 transition duration-150">Proposal 3: Multimodal Monitoring</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="proposal-content" class="py-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3" id="prop-title"></h3>
+                    <p class="text-gray-600 mb-6" id="prop-context"></p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <p class="text-xs font-semibold uppercase text-teal-700">Core Research Novelty</p>
+                            <p class="text-gray-800 mt-1" id="prop-novelty"></p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <p class="text-xs font-semibold uppercase text-teal-700">Critical RPi 5 Optimization</p>
+                            <p class="text-gray-800 mt-1" id="prop-optimization"></p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <p class="text-xs font-semibold uppercase text-teal-700">Primary Publishable Metrics</p>
+                            <p class="text-gray-800 mt-1" id="prop-metrics"></p>
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-700 mt-6 mb-3">In-Depth Methodology</h4>
+                    <p class="text-gray-600" id="prop-methodology"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const appData = {
+            benchmarks: [
+                { platform: "RPi Zero 2 W", fps: 8, power: 1.5, color: "#d1d5db" },
+                { platform: "RPi 5 (CPU)", fps: 30, power: 4.5, color: "#9ca3af" },
+                { platform: "RPi 5 + Coral TPU", fps: 105, power: 5.5, color: "#14b8a6" },
+                { platform: "Jetson Orin Nano (Ref)", fps: 250, power: 12, color: "#059669" }
+            ],
+            optimizations: {
+                qat: {
+                    title: "Quantization-Aware Training (QAT)",
+                    description: "QAT is essential for mitigating the accuracy loss associated with reducing weights and activations from 32-bit floating-point (FP32) to 8-bit integer (INT8). It simulates the quantization effect during the training phase.",
+                    metrics: "Accuracy, Inference Speed, Model Size",
+                    tradeoff: "Increased Training Time and complexity required compared to Post-Training Quantization (PTQ)."
+                },
+                pruning: {
+                    title: "Structured Pruning for Efficiency",
+                    description: "Pruning removes redundant connections. Structured pruning (removing entire channels/filters) is preferred on RPi because it simplifies the computation graph, enabling faster inference using standard TFLite libraries, unlike sparse (unstructured) pruning.",
+                    metrics: "FLOPs, Model Size, Energy Efficiency",
+                    tradeoff: "Requires specialized tool support (TF MOT) and carries a potential for accuracy loss."
+                },
+                distillation: {
+                    title: "Knowledge Distillation (KD)",
+                    description: "KD transfers complex knowledge (e.g., from a high-fidelity Teacher model run in simulation) to a lightweight Student model suitable for RPi deployment. This allows resource-constrained systems to execute highly complex tasks.",
+                    metrics: "Efficiency/Accuracy Ratio, Complexity Handling",
+                    tradeoff: "Requires a robust Teacher model and a two-stage training process."
+                }
+            },
+            proposals: {
+                1: {
+                    title: "Research Proposal 1: Real-Time, Quantized Semantic Segmentation",
+                    context: "Focuses on developing U-Net-Lite architecture for pixel-level classification (e.g., Safe Landing Zone prediction or infrastructure anomaly detection) that maintains high precision under the RPi 5's resource envelope.",
+                    novelty: "Custom U-Net-Lite Decoder & MobileNetV3 Encoder for feature fusion.",
+                    optimization: "QAT and Structured Pruning for high-efficiency INT8 TFLite deployment.",
+                    metrics: "Mean Intersection over Union (mIoU), Inference Latency (FPS), Model Size (MB).",
+                    methodology: "The U-Net-Lite adopts an optimized backbone (MobileNetV3-Small) and a novel decoder block that replaces standard convolutions with sequences of depthwise separable and 1x1 convolutions. The core contribution is designing a topology that maintains accuracy while adhering to the RPi's tight resource constraints."
+                },
+                2: {
+                    title: "Research Proposal 2: Learned Control Policies via Policy Distillation",
+                    context: "Focuses on direct, high-frequency autonomous control (e.g., agile flight). Utilizes Reinforcement Learning policies trained in simulation and deployed via Policy Distillation to an ultra-compact Student model.",
+                    novelty: "Policy Distillation from DDPG Teacher (Simulation) to compact MLP/SNN Student (RPi).",
+                    optimization: "Low-latency TFLite inference in control loop (500 Hz target frequency).",
+                    metrics: "Attitude Tracking Error (RMSE), Steady-State Error, Policy Model Size.",
+                    methodology: "The research centers on the policy distillation pipeline: a complex Teacher agent generates optimal control data, and the Student model (shallow MLP or SNN) is trained to imitate this behavior. The model must execute control commands at high frequency (e.g., 500 Hz) to be viable for closed-loop control."
+                },
+                3: {
+                    title: "Research Proposal 3: Multimodal Edge AI for Reliable Aerial System Monitoring",
+                    context: "Focuses on maximizing endurance and reliability by shifting monitoring from high-cost visual processing to low-power multimodal sensing (IMU, telemetrics, acoustic data).",
+                    novelty: "Fusion of unsupervised learning (telemetry anomaly detection) and optimized acoustic CNN (MFCC).",
+                    optimization: "Benchmarking the low-power efficacy of non-visual ML.",
+                    metrics: "Detection Rate (%), False Positive Rate (FPR), Operational Power Consumption (W).",
+                    methodology: "Utilizes an ensemble of unsupervised models (Autoencoders, Isolation Forests) for real-time flight anomaly detection from telemetrics. This is paired with a low-cost acoustic CNN for non-visual detection (e.g., component failure or unauthorized drones). The key finding is the reduced energy overhead compared to continuous vision."
+                }
+            }
+        };
+
+        let platformChartInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawPlatformChart();
+            switchProposal(1); // Initialize with Proposal 1
+        });
+
+        function navigateSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function drawPlatformChart() {
+            const ctx = document.getElementById('platformChart').getContext('2d');
+            
+            const platforms = appData.benchmarks.map(b => b.platform);
+            const fpsData = appData.benchmarks.map(b => b.fps);
+            const powerData = appData.benchmarks.map(b => b.power);
+            const colors = appData.benchmarks.map(b => b.color);
+
+            if (platformChartInstance) {
+                platformChartInstance.destroy();
+            }
+
+            platformChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: platforms,
+                    datasets: [
+                        {
+                            label: 'Optimized FPS (YOLO/SSD)',
+                            data: fpsData,
+                            backgroundColor: colors,
+                            borderColor: colors.map(c => c.replace('14b8a6', '065f46')),
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Energy Consumption (W)',
+                            data: powerData,
+                            type: 'line',
+                            backgroundColor: '#ef4444',
+                            borderColor: '#ef4444',
+                            yAxisID: 'y1',
+                            pointRadius: 5,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: {
+                            display: true,
+                            text: 'Platform Performance Trade-off (FPS vs. Power)',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        if (context.dataset.yAxisID === 'y') {
+                                            label += context.parsed.y + ' FPS';
+                                        } else {
+                                            label += context.parsed.y + ' W';
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'FPS (Higher is Better)' },
+                            suggestedMax: 120
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Power (W)' },
+                            grid: { drawOnChartArea: false },
+                            suggestedMax: 15
+                        }
+                    }
+                }
+            });
+        }
+
+        function toggleOptimization(strategyId) {
+            const detailsElement = document.getElementById('optimization-details');
+            const currentTitle = document.getElementById('opt-title').textContent;
+            const data = appData.optimizations[strategyId];
+
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => btn.classList.remove('border-teal-500'));
+            document.getElementById(`btn-${strategyId}`).classList.add('border-teal-500');
+
+            if (detailsElement.classList.contains('hidden') || currentTitle !== data.title) {
+                document.getElementById('opt-title').textContent = data.title;
+                document.getElementById('opt-description').textContent = data.description;
+                document.getElementById('opt-metrics').textContent = data.metrics;
+                document.getElementById('opt-tradeoff').textContent = data.tradeoff;
+                detailsElement.classList.remove('hidden');
+            } else {
+                detailsElement.classList.add('hidden');
+            }
+        }
+
+        function switchProposal(proposalId) {
+            const data = appData.proposals[proposalId];
+
+            document.querySelectorAll('[id^="tab-proposal"]').forEach(btn => {
+                btn.classList.remove('bg-teal-700', 'text-white', 'hover:text-teal-700');
+                btn.classList.add('bg-white', 'text-gray-600', 'hover:text-teal-700');
+            });
+
+            document.getElementById(`tab-proposal${proposalId}`).classList.add('bg-teal-700', 'text-white');
+            document.getElementById(`tab-proposal${proposalId}`).classList.remove('text-gray-600', 'hover:text-teal-700');
+
+            document.getElementById('prop-title').textContent = data.title;
+            document.getElementById('prop-context').textContent = data.context;
+            document.getElementById('prop-novelty').textContent = data.novelty;
+            document.getElementById('prop-optimization').textContent = data.optimization;
+            document.getElementById('prop-metrics').textContent = data.metrics;
+            document.getElementById('prop-methodology').textContent = data.methodology;
+        }
+
+    </script>
+</body>
+</html>
